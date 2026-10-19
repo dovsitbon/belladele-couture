@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+const faq = [
+  { q: 'Quand faut-il venir pour faire ajuster sa robe de mariée ?', a: 'Le plus tôt possible une fois la robe en main, pour laisser la place à plusieurs essayages. Appelez l’atelier en donnant la date du mariage : la couturière vous indiquera le bon moment pour le premier rendez-vous.' },
+  { q: 'Que faut-il apporter aux essayages ?', a: 'Les chaussures et les sous-vêtements que vous porterez le jour J. La hauteur des talons change la longueur à prévoir, et le maintien change l’ajustement du bustier.' },
+  { q: 'Peut-on créer une robe de mairie différente de la robe de cérémonie ?', a: 'Oui. L’atelier réalise des robes de mairie sur mesure, plus courtes ou plus simples, qui peuvent rappeler la robe de cérémonie par un tissu ou un détail.' },
+];
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Robe de mariée et robe de mairie sur mesure, ajustement de robe de mariée',
+  serviceType: 'Couture de mariage',
+  provider: { '@id': `${Astro.site!.origin}/#atelier` },
+  areaServed: [site.address.city, ...site.nearby],
+};
+---
+<Base
+  title="Robe de mariée sur mesure à Groslay"
+  description="Robe de mariée et robe de mairie sur mesure, ajustement et retouche de robe de mariée à Groslay, Val-d’Oise. Atelier Belladele Couture, sur rendez-vous : 06 34 42 51 68."
+  breadcrumbs={[{ name: 'Robe de mariée', href: '/robe-de-mariee' }]}
+  jsonLd={[serviceLd, faqLd]}
+>
+  <section class="page-head">
+    <div class="wrap split split--wide-text">
+      <div>
+        <p class="eyebrow">Mariage</p>
+        <h1>Robe de mariée : <em>créée ou ajustée</em> pour vous</h1>
+        <p class="lead">
+          Que vous rêviez d’une robe unique ou que vous ayez déjà trouvé la vôtre, l’atelier de Groslay
+          s’occupe de la création comme de l’ajustement, jusqu’au dernier essayage.
+        </p>
+        <div class="actions" style="margin-top:2rem">
+          <a class="btn" href={site.phoneHref}><Icon name="phone" />Prendre rendez-vous</a>
+          <a class="btn btn--ghost" href="/contact#formulaire">Indiquer la date du mariage</a>
+        </div>
+      </div>
+      <Photo photo={photos.robeMarieeSuspendue} sizes="(min-width: 860px) 34vw, 100vw" ratio="4 / 5" priority />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="options-title">
+    <div class="wrap">
+      <h2 id="options-title" class="visually-hidden">Les prestations mariage</h2>
+      <div class="options">
+        <article data-reveal style="--i:0">
+          <span class="num">01</span>
+          <h3>Création sur mesure</h3>
+          <p class="muted">Une robe de mariée dessinée à partir de vos envies : coupe, dentelle, broderies, dos, traîne. Elle est construite à vos mesures et ajustée au fil des essayages.</p>
+        </article>
+        <article data-reveal style="--i:1">
+          <span class="num">02</span>
+          <h3>Robe de mairie</h3>
+          <p class="muted">Une robe pour le passage à la mairie, en crêpe, satin ou dentelle, que vous pourrez porter à nouveau. Elle peut aussi être assortie à la tenue d’une petite fille.</p>
+        </article>
+        <article data-reveal style="--i:2">
+          <span class="num">03</span>
+          <h3>Ajustement de votre robe</h3>
+          <p class="muted">Vous avez acheté votre robe ailleurs ? L’atelier la reprend à vos mesures pour qu’elle tombe parfaitement le jour J.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="temoin-title">
+    <div class="wrap split">
+      <div data-reveal>
+        <Photo photo={photos.marieeFenetre} sizes="(min-width: 860px) 36vw, 100vw" ratio="4 / 5" />
+      </div>
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Ce qu’en disent les mariées</p>
+        <h2 id="temoin-title">Un ajustement <em>soigné</em>, sans stress</h2>
+        <p>
+          Sur Google, l’atelier affiche une note de <strong>{site.rating.value}/5</strong> sur {site.rating.count} avis
+          (au {site.rating.checkedOn}). Les avis mentionnent souvent les robes, l’écoute de la couturière et
+          l’attention portée aux détails.
+        </p>
+        <a class="link-arrow" href={site.googleMapsUrl} rel="noopener" target="_blank">Lire les avis sur Google<Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 id="faq-title" data-reveal style="margin-bottom:2rem">Préparer ses essayages</h2>
+      <div class="faq" data-reveal>
+        {faq.map((f) => (<details><summary>{f.q}</summary><div><p>{f.a}</p></div></details>))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="La date est fixée ?" text="Appelez l’atelier en indiquant la date de votre mariage : vous saurez tout de suite quand venir pour le premier essayage." />
+</Base>
+
+<style>
+  .page-head :global(.photo) { max-width: 28rem; justify-self: end; width: 100%; }
+  @media (max-width: 859px) { .page-head :global(.photo) { aspect-ratio: 3 / 2 !important; max-width: none; } }
+  .options { display: grid; gap: 2.5rem; }
+  @media (min-width: 860px) { .options { grid-template-columns: repeat(3, 1fr); gap: 3rem; } }
+  .options article { border-top: 1px solid var(--ink); padding-top: 1.25rem; display: grid; gap: 0.6rem; align-content: start; }
+  .num { font-family: var(--serif); color: var(--gold); font-weight: 600; letter-spacing: 0.08em; }
+</style>

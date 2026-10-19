@@ -1,0 +1,18 @@
+---
+/** Logotype typographique provisoire, inspiré du logo doré « Bell Adèle Couture » visible sur Instagram.
+ *  À remplacer par le fichier vectoriel officiel fourni par la commerçante. */
+interface Props { tone?: 'dark' | 'light' }
+const { tone = 'dark' } = Astro.props;
+---
+<span class:list={['logo', `logo--${tone}`]} translate="no">
+  <span class="logo__script">Belladele</span>
+  <span class="logo__sub">Couture</span>
+</span>
+
+<style>
+  .logo { display: inline-flex; flex-direction: column; line-height: 1; }
+  .logo__script { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 1.7rem; letter-spacing: -0.01em; }
+  .logo__sub { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.42em; text-transform: uppercase; margin-top: 0.2rem; padding-left: 0.15rem; color: var(--gold); font-weight: 500; }
+  .logo--light .logo__script { color: var(--deep-ink); }
+  .logo--light .logo__sub { color: #d9b877; }
+</style>

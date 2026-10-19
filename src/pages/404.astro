@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { nav, site } from '../data/site';
+---
+<Base title="Page introuvable" description="Cette page n’existe pas ou a été déplacée." noindex>
+  <section class="wrap nf">
+    <p class="eyebrow">Erreur 404</p>
+    <h1>Ce fil-là <em>ne mène nulle part</em>.</h1>
+    <p class="lead">La page demandée n’existe pas ou a été déplacée. Voici où aller :</p>
+    <ul>
+      <li><a href="/">Accueil</a></li>
+      {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+    </ul>
+    <a class="btn" href={site.phoneHref}><Icon name="phone" />Appeler l’atelier</a>
+  </section>
+</Base>
+
+<style>
+  .nf { padding-block: var(--section); max-width: 44rem; }
+  .nf h1 { margin-bottom: 1.25rem; }
+  .nf ul { margin: 1.5rem 0 2rem; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
+</style>

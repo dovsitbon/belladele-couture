@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import { fullAddress, site } from '../data/site';
+---
+<Base
+  title="Mentions légales"
+  description="Mentions légales du site de l’atelier Belladele Couture à Groslay."
+  breadcrumbs={[{ name: 'Mentions légales', href: '/mentions-legales' }]}
+>
+  <article class="wrap legal">
+    <h1>Mentions légales</h1>
+
+    <p class="todo" role="note">
+      <strong>À compléter avant la mise en ligne définitive :</strong> les éléments signalés « À confirmer » n’ont pas pu
+      être vérifiés dans les registres publics et doivent être fournis par la commerçante.
+    </p>
+
+    <h2>Éditeur du site</h2>
+    <ul>
+      <li>Nom commercial : {site.legalTradeName}</li>
+      <li>Exploitant (nom et prénom ou dénomination sociale) : <mark>À confirmer</mark></li>
+      <li>Forme juridique : <mark>À confirmer</mark> (ex. entreprise individuelle / micro-entreprise)</li>
+      <li>SIREN / SIRET : <mark>À confirmer</mark></li>
+      <li>Immatriculation au Registre national des entreprises (activité artisanale) : <mark>À confirmer</mark></li>
+      <li>N° de TVA intracommunautaire : <mark>À confirmer ou « TVA non applicable, art. 293 B du CGI »</mark></li>
+      <li>Adresse : {fullAddress}</li>
+      <li>Téléphone : <a href={site.phoneHref}>{site.phone}</a></li>
+      <li>E-mail : <a href={`mailto:${site.email}`}>{site.email}</a></li>
+      <li>Directrice de la publication : <mark>À confirmer</mark></li>
+    </ul>
+
+    <h2>Hébergement</h2>
+    <p>Vercel Inc., 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis — <a href="https://vercel.com" rel="noopener">vercel.com</a>.</p>
+
+    <h2>Propriété intellectuelle</h2>
+    <p>
+      Les textes du site sont la propriété de l’éditeur. Les photographies marquées « Illustration » proviennent de
+      la banque d’images Unsplash et sont utilisées selon sa licence ; elles ne représentent pas des réalisations de
+      l’atelier. Le nom de chaque photographe est indiqué sur l’image.
+    </p>
+
+    <h2>Avis clients</h2>
+    <p>
+      La note affichée correspond à la moyenne publique des avis Google de l’établissement, à la date indiquée.
+      Les avis ne sont pas reproduits sur ce site ; ils peuvent être consultés directement sur Google.
+    </p>
+
+    <h2>Médiation de la consommation</h2>
+    <p>
+      Conformément à l’article L.612-1 du Code de la consommation, le client peut recourir gratuitement à un
+      médiateur de la consommation : <mark>nom et coordonnées du médiateur à confirmer</mark>.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .legal { max-width: 48rem; padding-top: clamp(2.5rem, 6vw, 4rem); padding-bottom: var(--section); }
+  .legal h1 { margin-bottom: 2rem; }
+  .legal h2 { font-size: 1.7rem; margin: 2.5rem 0 0.75rem; }
+  .legal ul { padding-left: 1.2rem; display: grid; gap: 0.35rem; }
+  .legal p { color: var(--ink-2); }
+  .todo { background: var(--gold-soft); border-radius: var(--radius); padding: 1rem 1.25rem; color: var(--ink) !important; }
+  mark { background: #fbe3a8; color: var(--ink); padding: 0 0.25rem; border-radius: 2px; }
+</style>

@@ -1,0 +1,30 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import OpenStatus from './OpenStatus.astro';
+interface Props { title?: string; text?: string }
+const {
+  title = 'Parlons de votre projet',
+  text = 'Un essayage, une retouche, une robe à créer : appelez l’atelier pour fixer un rendez-vous, ou écrivez-nous en quelques lignes.',
+} = Astro.props;
+---
+<section class="cta" aria-labelledby="cta-title">
+  <div class="wrap cta__inner" data-reveal>
+    <div>
+      <h2 id="cta-title">{title}</h2>
+      <p class="cta__text">{text}</p>
+      <OpenStatus tone="light" />
+    </div>
+    <div class="actions">
+      <a class="btn btn--light" href={site.phoneHref}><Icon name="phone" />{site.phone}</a>
+      <a class="btn btn--outline-light" href="/contact#formulaire"><Icon name="mail" />Demander un devis</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { background: var(--deep); color: var(--deep-ink); padding-block: clamp(3.5rem, 8vw, 6rem); border-bottom: 1px solid rgba(243, 237, 227, 0.14); }
+  .cta__inner { display: grid; gap: 2rem; align-items: end; }
+  @media (min-width: 900px) { .cta__inner { grid-template-columns: 1.4fr auto; gap: 4rem; } }
+  .cta__text { color: var(--deep-ink-2); margin: 1rem 0 1.25rem; max-width: 36rem; }
+</style>

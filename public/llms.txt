@@ -1,0 +1,18 @@
+# Belladele Couture (Retouches et Créations Belladele Couture)
+
+> Atelier de couture à Groslay (95410, Val-d'Oise, France). Création sur mesure et semi-mesure de robes de soirée, de cocktail, de mariée et de mairie, tenues mère-fille, accessoires, ajustement de robes de mariée et retouches de vêtements. Prix sur devis.
+
+- Adresse : 1 rue Magnier Bédu, 95410 Groslay, France
+- Téléphone : +33 6 34 42 51 68
+- E-mail : belladelecouture@gmail.com
+- Horaires : lundi au jeudi, 10 h 30 – 16 h ; fermé vendredi, samedi et dimanche
+- Note Google : 4,9/5 sur 16 avis (relevé le 19 octobre 2026)
+- Instagram : https://www.instagram.com/belladele_couture/
+
+## Pages
+
+- [Accueil](https://belladele-couture.vercel.app/): présentation de l'atelier, prestations, horaires, accès
+- [Création sur mesure](https://belladele-couture.vercel.app/creation-sur-mesure): robes de soirée, cocktail, mère-fille, sur-mesure vs semi-mesure
+- [Robe de mariée](https://belladele-couture.vercel.app/robe-de-mariee): création, robe de mairie, ajustement de robe de mariée
+- [Retouches](https://belladele-couture.vercel.app/retouches): retouches de vêtements
+- [Contact](https://belladele-couture.vercel.app/contact): téléphone, e-mail, formulaire, plan d'accès

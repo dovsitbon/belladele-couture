@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+<Base
+  title="Politique de confidentialité"
+  description="Comment l’atelier Belladele Couture traite les données transmises via le formulaire de contact."
+  breadcrumbs={[{ name: 'Confidentialité', href: '/confidentialite' }]}
+>
+  <article class="wrap legal">
+    <h1>Politique de confidentialité</h1>
+
+    <h2>Responsable du traitement</h2>
+    <p>{site.legalTradeName}, {site.address.street}, {site.address.postalCode} {site.address.city} — <a href={`mailto:${site.email}`}>{site.email}</a>. Identité de l’exploitant : à confirmer (voir les <a href="/mentions-legales">mentions légales</a>).</p>
+
+    <h2>Données collectées</h2>
+    <p>Via le formulaire de contact : nom, téléphone, e-mail (facultatif), type de demande, date de l’événement (facultative) et message. Aucune donnée n’est collectée à votre insu.</p>
+
+    <h2>Finalité et base légale</h2>
+    <p>Ces données servent uniquement à répondre à votre demande de rendez-vous ou de devis (mesures précontractuelles prises à votre demande). Elles ne sont ni vendues ni utilisées à des fins publicitaires.</p>
+
+    <h2>Destinataires et durée de conservation</h2>
+    <p>Les messages sont transmis par e-mail à l’atelier via un prestataire d’envoi (Resend) et le site est hébergé par Vercel. Ils sont conservés le temps nécessaire au traitement de la demande, puis au plus trois ans après le dernier contact.</p>
+
+    <h2>Cookies et contenus tiers</h2>
+    <p>Le site ne dépose aucun cookie de mesure d’audience ni de publicité. La carte Google Maps n’est chargée que si vous cliquez sur « Afficher la carte » ; Google peut alors déposer ses propres cookies. Les liens vers Instagram et Google Maps vous dirigent vers ces services, soumis à leurs propres politiques.</p>
+
+    <h2>Vos droits</h2>
+    <p>Vous pouvez demander l’accès, la rectification ou l’effacement de vos données, ou vous opposer à leur traitement, en écrivant à <a href={`mailto:${site.email}`}>{site.email}</a>. Vous pouvez aussi saisir la CNIL (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).</p>
+  </article>
+</Base>
+
+<style>
+  .legal { max-width: 48rem; padding-top: clamp(2.5rem, 6vw, 4rem); padding-bottom: var(--section); }
+  .legal h1 { margin-bottom: 2rem; }
+  .legal h2 { font-size: 1.7rem; margin: 2.5rem 0 0.75rem; }
+  .legal p { color: var(--ink-2); }
+</style>

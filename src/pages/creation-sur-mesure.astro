@@ -1,0 +1,152 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+const creations = [
+  { title: 'Robes de soirée', text: 'Longues ou mi-longues, en satin, crêpe ou dentelle, pour un gala, une fête de famille ou un événement.' },
+  { title: 'Robes de cocktail', text: 'Des coupes plus courtes et faciles à porter, pensées pour être remises après l’événement.' },
+  { title: 'Robes de mariée et de mairie', text: 'Pour la cérémonie, la mairie ou les deux. Voir la page dédiée à la robe de mariée.', href: '/robe-de-mariee' },
+  { title: 'Tenues mère-fille', text: 'Des modèles assortis pour une maman et sa fille, déclinés dans le même tissu.' },
+  { title: 'Accessoires', text: 'Pièces assorties à la robe, réalisées à l’atelier pour compléter la tenue.' },
+];
+
+const faq = [
+  { q: 'Quelle différence entre sur-mesure et semi-mesure ?', a: 'Le sur-mesure part d’une feuille blanche : le patron est construit à vos mesures. La semi-mesure part d’un modèle de base que l’on adapte à votre morphologie et à vos choix (tissu, longueur, décolleté, manches). Elle convient bien quand le délai ou le budget sont plus serrés.' },
+  { q: 'Combien de temps prévoir ?', a: 'Le délai dépend du modèle, du tissu et du nombre d’essayages. Le plus simple est d’appeler l’atelier en indiquant la date de votre événement : la couturière vous dira ce qui est réalisable.' },
+  { q: 'Puis-je venir avec une photo ou une inspiration ?', a: 'Oui, c’est même le meilleur point de départ. Photos, croquis, captures d’écran : tout ce qui aide à comprendre ce que vous imaginez est utile lors du premier rendez-vous.' },
+];
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Création de robe sur mesure et semi-mesure',
+  serviceType: 'Couture sur mesure',
+  provider: { '@id': `${Astro.site!.origin}/#atelier` },
+  areaServed: [site.address.city, ...site.nearby],
+  description: 'Création sur mesure et semi-mesure de robes de soirée, de cocktail, de mariée et de mairie, tenues mère-fille et accessoires.',
+};
+---
+<Base
+  title="Robe sur mesure à Groslay (95)"
+  description="Création de robes sur mesure et semi-mesure à Groslay (95) : robes de soirée, de cocktail, de mariée et de mairie, tenues mère-fille. Rendez-vous au 06 34 42 51 68."
+  breadcrumbs={[{ name: 'Création sur mesure', href: '/creation-sur-mesure' }]}
+  jsonLd={[serviceLd, faqLd]}
+>
+  <section class="page-head">
+    <div class="wrap split split--wide-text">
+      <div>
+        <p class="eyebrow">Création</p>
+        <h1>Robes <em>sur mesure</em> et semi-mesure</h1>
+        <p class="lead">
+          Une robe de soirée, de cocktail ou de cérémonie dessinée pour vous et ajustée sur vous,
+          dans l’atelier de Groslay.
+        </p>
+        <div class="actions" style="margin-top:2rem">
+          <a class="btn" href={site.phoneHref}><Icon name="phone" />Prendre rendez-vous</a>
+          <a class="btn btn--ghost" href="/contact#formulaire">Décrire mon projet</a>
+        </div>
+      </div>
+      <Photo photo={photos.robeVitrine} sizes="(min-width: 860px) 34vw, 100vw" ratio="4 / 5" priority />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="types-title">
+    <div class="wrap">
+      <h2 id="types-title" data-reveal>Ce que l’atelier crée</h2>
+      <ul class="rule-list types">
+        {creations.map((c, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <h3>{c.title}</h3>
+            <p class="muted">
+              {c.text}
+              {c.href && <> <a href={c.href}>En savoir plus</a></>}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="deux-title">
+    <div class="wrap">
+      <h2 id="deux-title" data-reveal>Deux façons de faire</h2>
+      <div class="compare">
+        <article data-reveal style="--i:0">
+          <p class="eyebrow">Sur-mesure</p>
+          <h3>Un modèle unique</h3>
+          <p class="muted">Le patron est construit à partir de vos mesures et de votre projet. Vous choisissez la coupe, le tissu et chaque détail ; la robe est ajustée au fil de plusieurs essayages.</p>
+          <ul>
+            <li><Icon name="check" />Pour une pièce qui n’existe nulle part ailleurs</li>
+            <li><Icon name="check" />Pour les silhouettes difficiles à habiller en prêt-à-porter</li>
+          </ul>
+        </article>
+        <article data-reveal style="--i:1">
+          <p class="eyebrow">Semi-mesure</p>
+          <h3>Une base adaptée à vous</h3>
+          <p class="muted">On part d’un modèle existant que l’on modifie : longueur, encolure, manches, tissu. La robe est ensuite ajustée à votre morphologie.</p>
+          <ul>
+            <li><Icon name="check" />Quand le délai est plus court</li>
+            <li><Icon name="check" />Pour maîtriser le budget sans renoncer à l’ajustement</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="matieres-title">
+    <div class="wrap split">
+      <div class="stack" data-reveal>
+        <h2 id="matieres-title">Le choix des <em>matières</em></h2>
+        <p>
+          Satin, crêpe, dentelle, broderies, fleurs appliquées : le tissu fait une grande partie de la robe.
+          Le premier rendez-vous sert aussi à en parler, pour que la matière corresponde à la coupe, à la saison
+          et à l’occasion.
+        </p>
+        <p class="muted">
+          Pour voir des robes réalisées par l’atelier, le plus à jour reste le compte Instagram
+          <a href={site.social.instagram.url} rel="noopener" target="_blank">{site.social.instagram.handle}</a>.
+        </p>
+      </div>
+      <div class="duo" data-reveal>
+        <Photo photo={photos.satin} sizes="(min-width: 860px) 22vw, 50vw" ratio="3 / 4" />
+        <Photo photo={photos.dentelle} sizes="(min-width: 860px) 22vw, 50vw" ratio="3 / 4" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 id="faq-title" data-reveal style="margin-bottom:2rem">Questions fréquentes</h2>
+      <div class="faq" data-reveal>
+        {faq.map((f) => (<details><summary>{f.q}</summary><div><p>{f.a}</p></div></details>))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Une robe en tête ?" text="Appelez l’atelier pour un premier rendez-vous, ou décrivez votre projet en quelques lignes. Mentionnez la date de votre événement." />
+</Base>
+
+<style>
+  .page-head :global(.photo) { max-width: 28rem; justify-self: end; width: 100%; }
+  @media (max-width: 859px) { .page-head :global(.photo) { aspect-ratio: 3 / 2 !important; max-width: none; } }
+  .types { margin-top: 2.5rem; }
+  .types li { display: grid; gap: 0.4rem; padding-block: 1.5rem; }
+  @media (min-width: 860px) { .types li { grid-template-columns: 0.8fr 1.2fr; gap: 3rem; align-items: baseline; } }
+  .compare { display: grid; gap: 1.5rem; margin-top: 2.5rem; }
+  @media (min-width: 860px) { .compare { grid-template-columns: 1fr 1fr; } }
+  .compare article { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: clamp(1.75rem, 4vw, 2.75rem); display: grid; gap: 0.9rem; align-content: start; }
+  .compare .eyebrow { margin-bottom: 0; }
+  .compare ul { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; gap: 0.6rem; }
+  .compare li { display: flex; gap: 0.6rem; align-items: flex-start; }
+  .compare li :global(svg) { width: 1.1rem; height: 1.1rem; color: var(--gold); flex: none; margin-top: 0.3rem; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .duo :global(.photo:nth-child(2)) { margin-top: 3rem; }
+</style>

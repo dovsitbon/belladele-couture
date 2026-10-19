@@ -1,0 +1,272 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Hours from '../components/Hours.astro';
+import Icon from '../components/Icon.astro';
+import MapFacade from '../components/MapFacade.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+const services = [
+  {
+    icon: 'dress',
+    title: 'Robes de soirée et de cocktail',
+    text: 'Une robe imaginée pour vous, en sur-mesure ou en semi-mesure : choix du modèle, des tissus, essayages jusqu’au tombé juste.',
+    href: '/creation-sur-mesure',
+    cta: 'La création sur mesure',
+  },
+  {
+    icon: 'needle',
+    title: 'Mariée et mairie',
+    text: 'Création de robes de mariée et de robes de mairie, ou ajustement de la robe que vous avez déjà choisie.',
+    href: '/robe-de-mariee',
+    cta: 'Robe de mariée',
+  },
+  {
+    icon: 'scissors',
+    title: 'Retouches de vêtements',
+    text: 'Vos vêtements du quotidien ou de cérémonie remis à vos mesures. Apportez la pièce : le devis se fait sur place.',
+    href: '/retouches',
+    cta: 'Les retouches',
+  },
+] as const;
+
+const faq = [
+  {
+    q: 'Faut-il prendre rendez-vous ?',
+    a: `Pour une création ou un essayage, oui : appelez le ${site.phone} pour convenir d’un créneau. L’atelier est ouvert du lundi au jeudi, de 10 h 30 à 16 h.`,
+  },
+  {
+    q: 'Combien coûte une retouche ou une robe sur mesure ?',
+    a: 'Chaque pièce est différente : le prix dépend du travail, du tissu et des finitions. Le devis est établi à l’atelier, après avoir vu le vêtement ou discuté de votre projet.',
+  },
+  {
+    q: 'Où se trouve l’atelier ?',
+    a: `Au ${site.address.street}, ${site.address.postalCode} ${site.address.city}, dans le Val-d’Oise. L’atelier est facilement accessible depuis ${site.nearby.slice(0, 4).join(', ')}.`,
+  },
+  {
+    q: 'Peut-on faire ajuster une robe de mariée achetée ailleurs ?',
+    a: 'Oui. L’ajustement de robes de mariée fait partie du travail de l’atelier. Prévoyez de venir suffisamment tôt avant la cérémonie pour laisser le temps aux essayages.',
+  },
+];
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title="Couturière à Groslay : sur mesure et retouches | Belladele"
+  description="Atelier de couture à Groslay (95) : robes de soirée, de mariée et de mairie sur mesure, ajustements et retouches. Lundi–jeudi 10 h 30–16 h. 06 34 42 51 68."
+  jsonLd={[faqLd]}
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <p class="eyebrow">Atelier de couture · {site.address.city}, Val-d’Oise</p>
+        <h1>Votre robe, <em>cousue pour vous</em>.</h1>
+        <p class="lead">
+          Belladele Couture crée sur mesure des robes de soirée, de cocktail, de mariée et de mairie,
+          et retouche vos vêtements pour qu’ils tombent parfaitement.
+        </p>
+        <div class="actions">
+          <a class="btn" href={site.phoneHref}><Icon name="phone" />Appeler l’atelier</a>
+          <a class="btn btn--ghost" href="/contact#formulaire">Demander un devis</a>
+        </div>
+        <ul class="hero__facts">
+          <li>
+            <a href={site.googleMapsUrl} rel="noopener" target="_blank" class="rating">
+              <span class="stars" aria-hidden="true">{Array.from({ length: 5 }).map(() => <Icon name="star" />)}</span>
+              <span><strong>{site.rating.value}/5</strong> · {site.rating.count} avis Google</span>
+            </a>
+          </li>
+          <li><OpenStatus /></li>
+        </ul>
+      </div>
+      <div class="hero__media">
+        <Photo photo={photos.dentellePerlee} sizes="(min-width: 860px) 42vw, 100vw" ratio="4 / 5" priority />
+      </div>
+    </div>
+  </section>
+
+  <!-- Prestations -->
+  <section class="section" aria-labelledby="prestations-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Prestations</p>
+        <h2 id="prestations-title">Créer, ajuster, retoucher</h2>
+      </div>
+      <ul class="services">
+        {services.map((s, i) => (
+          <li class="service" data-reveal style={`--i:${i}`}>
+            <Icon name={s.icon} class="service__icon" />
+            <h3>{s.title}</h3>
+            <p class="muted">{s.text}</p>
+            <a class="link-arrow" href={s.href}>{s.cta}<Icon name="arrow" /></a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- L'atelier -->
+  <section class="section" aria-labelledby="atelier-title">
+    <div class="wrap split">
+      <div class="atelier__media" data-reveal>
+        <Photo photo={photos.metreCiseaux} sizes="(min-width: 860px) 36vw, 100vw" ratio="4 / 5" />
+      </div>
+      <div class="stack" data-reveal>
+        <p class="eyebrow">L’atelier</p>
+        <h2 id="atelier-title">Du croquis au <em>dernier point</em></h2>
+        <p>
+          Chez Belladele Couture, chaque robe part d’une conversation : l’occasion, la silhouette que vous imaginez,
+          le tissu qui vous plaît. La couturière prend vos mesures, puis la robe se construit au fil des essayages,
+          jusqu’à ce qu’elle vous aille exactement.
+        </p>
+        <p>
+          L’atelier propose deux approches : le <strong>sur-mesure</strong>, où le modèle est entièrement dessiné et
+          coupé pour vous, et la <strong>semi-mesure</strong>, à partir d’une base existante adaptée à votre corps et à
+          vos envies. Il réalise aussi des tenues assorties mère-fille et des accessoires.
+        </p>
+        <a class="link-arrow" href={site.social.instagram.url} rel="noopener" target="_blank">
+          Voir les créations sur Instagram<Icon name="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Avis -->
+  <section class="section" aria-labelledby="avis-title">
+    <div class="wrap">
+      <div class="reviews" data-reveal>
+        <div>
+          <p class="eyebrow">Avis clientes</p>
+          <h2 id="avis-title"><span class="big">{site.rating.value}</span><span class="out">/5</span></h2>
+          <p class="muted">Note moyenne sur {site.rating.count} avis Google, relevée le {site.rating.checkedOn}.</p>
+        </div>
+        <div class="reviews__body">
+          <p>
+            Dans leurs avis, les clientes reviennent surtout sur le professionnalisme et l’écoute de la couturière,
+            le soin apporté aux finitions et la rapidité d’exécution. Une cliente y raconte notamment
+            l’ajustement de sa robe de mariée.
+          </p>
+          <a class="btn btn--ghost" href={site.googleMapsUrl} rel="noopener" target="_blank">
+            Lire les avis sur Google<Icon name="arrow" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comment ça se passe -->
+  <section class="section" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Comment ça se passe</p>
+        <h2 id="process-title">Trois étapes, un interlocuteur</h2>
+      </div>
+      <ol class="steps">
+        <li data-reveal style="--i:0">
+          <span class="steps__n">01</span>
+          <h3>Vous appelez</h3>
+          <p class="muted">Vous décrivez votre besoin et fixez un rendez-vous, du lundi au jeudi.</p>
+        </li>
+        <li data-reveal style="--i:1">
+          <span class="steps__n">02</span>
+          <h3>Rendez-vous à l’atelier</h3>
+          <p class="muted">Prise de mesures, choix du modèle ou examen du vêtement, et devis.</p>
+        </li>
+        <li data-reveal style="--i:2">
+          <span class="steps__n">03</span>
+          <h3>Essayages et remise</h3>
+          <p class="muted">La pièce est ajustée sur vous jusqu’au résultat attendu, puis vous la récupérez.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Infos pratiques -->
+  <section class="section" aria-labelledby="infos-title">
+    <div class="wrap split infos">
+      <div class="stack" data-reveal>
+        <p class="eyebrow">Infos pratiques</p>
+        <h2 id="infos-title">Venir à l’atelier</h2>
+        <ul class="contact-list">
+          <li><Icon name="pin" /><a href={site.directionsUrl} rel="noopener" target="_blank">{site.address.street}, {site.address.postalCode} {site.address.city}</a></li>
+          <li><Icon name="phone" /><a href={site.phoneHref}>{site.phone}</a></li>
+          <li><Icon name="mail" /><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        </ul>
+        <Hours />
+      </div>
+      <div data-reveal><MapFacade /></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap faq-wrap">
+      <div data-reveal>
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2 id="faq-title">Avant de venir</h2>
+      </div>
+      <div class="faq" data-reveal>
+        {faq.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <div><p>{f.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .hero { padding-top: clamp(2.5rem, 6vw, 5rem); padding-bottom: var(--section); }
+  .hero__grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 860px) { .hero__grid { grid-template-columns: 1.1fr 0.9fr; gap: 4.5rem; } }
+  .hero h1 { margin-bottom: 1.5rem; }
+  .hero .lead { margin-bottom: 2rem; }
+  .hero__facts { list-style: none; padding: 0; margin: 2.25rem 0 0; display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; align-items: center; font-size: 0.9rem; }
+  .rating { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; min-height: 2.75rem; }
+  .stars { display: inline-flex; color: var(--gold); }
+  .stars :global(svg) { width: 0.95rem; height: 0.95rem; }
+  .hero__media { max-width: 34rem; width: 100%; justify-self: end; }
+  @media (max-width: 859px) { .hero__media { justify-self: stretch; max-width: none; } .hero__media :global(.photo) { aspect-ratio: 4 / 3 !important; } }
+
+  .section-head { margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+  .services { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  @media (min-width: 860px) { .services { grid-template-columns: repeat(3, 1fr); } }
+  .service { background: var(--surface); padding: clamp(1.75rem, 3vw, 2.5rem); display: flex; flex-direction: column; gap: 0.9rem; }
+  .service p { flex: 1; }
+  .service .link-arrow { align-self: flex-start; }
+  :global(.service__icon) { width: 2rem; height: 2rem; color: var(--gold); margin-bottom: 0.5rem; }
+
+  .atelier__media { max-width: 30rem; }
+
+  .reviews { display: grid; gap: 2rem; padding: clamp(2rem, 5vw, 3.5rem); background: var(--gold-soft); border-radius: var(--radius); }
+  @media (min-width: 860px) { .reviews { grid-template-columns: 0.8fr 1.2fr; gap: 4rem; align-items: center; } }
+  .reviews .big { font-size: clamp(4rem, 10vw, 6.5rem); line-height: 0.9; }
+  .reviews .out { font-size: 0.5em; color: var(--ink-2); margin-left: 0.2rem; }
+  .reviews h2 { margin-bottom: 0.75rem; }
+  .reviews__body { display: grid; gap: 1.5rem; justify-items: start; font-size: 1.1rem; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.5rem; counter-reset: s; }
+  @media (min-width: 860px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 3rem; } }
+  .steps li { border-top: 1px solid var(--ink); padding-top: 1.25rem; display: grid; gap: 0.6rem; }
+  .steps__n { font-family: var(--serif); font-size: 1rem; color: var(--gold); font-weight: 600; letter-spacing: 0.08em; }
+
+  .infos { align-items: stretch; }
+  .contact-list { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.25rem; }
+  .contact-list li { display: flex; gap: 0.75rem; align-items: center; min-height: 2.75rem; }
+  .contact-list :global(svg) { width: 1.2rem; height: 1.2rem; color: var(--gold); flex: none; }
+
+  .faq-wrap { display: grid; gap: 2rem; }
+  @media (min-width: 860px) { .faq-wrap { grid-template-columns: 0.8fr 1.2fr; gap: 4rem; } }
+</style>

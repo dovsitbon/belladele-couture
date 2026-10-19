@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Hours from '../components/Hours.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+// Exemples de demandes courantes — liste à valider avec la commerçante (voir README).
+const examples = [
+  { title: 'Longueurs', text: 'Ourlets de pantalons, de jupes et de robes, longueur de manches.' },
+  { title: 'Ajustements', text: 'Reprendre ou élargir une taille, cintrer une robe, une veste ou une chemise.' },
+  { title: 'Fermetures', text: 'Remplacement de fermeture éclair, boutons, pressions.' },
+  { title: 'Tenues de cérémonie', text: 'Robes de soirée, robes de mariée, tenues de fête à ajuster avant l’événement.' },
+];
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Retouches de vêtements',
+  serviceType: 'Retouche de vêtements',
+  provider: { '@id': `${Astro.site!.origin}/#atelier` },
+  areaServed: [site.address.city, ...site.nearby],
+};
+---
+<Base
+  title="Retouche de vêtements à Groslay"
+  description="Retouches de vêtements à Groslay (95) : ourlets, ajustements, fermetures, tenues de cérémonie et robes de mariée. Atelier Belladele Couture, lundi–jeudi 10 h 30–16 h."
+  breadcrumbs={[{ name: 'Retouches', href: '/retouches' }]}
+  jsonLd={[serviceLd]}
+>
+  <section class="page-head">
+    <div class="wrap split split--wide-text">
+      <div>
+        <p class="eyebrow">Retouches</p>
+        <h1>Des vêtements <em>à vos mesures</em></h1>
+        <p class="lead">
+          Un pantalon trop long, une robe à reprendre, une fermeture à changer : passez à l’atelier avec la pièce,
+          la couturière vous dit ce qui est possible et à quel prix.
+        </p>
+        <div class="actions" style="margin-top:2rem">
+          <a class="btn" href={site.phoneHref}><Icon name="phone" />Appeler avant de passer</a>
+          <a class="btn btn--ghost" href={site.directionsUrl} rel="noopener" target="_blank"><Icon name="directions" />Itinéraire</a>
+        </div>
+      </div>
+      <Photo photo={photos.machineCoudre} sizes="(min-width: 860px) 34vw, 100vw" ratio="4 / 5" priority />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="ex-title">
+    <div class="wrap">
+      <div data-reveal>
+        <h2 id="ex-title">Les demandes les plus fréquentes</h2>
+        <p class="lead" style="margin-top:1rem">Une autre retouche en tête ? Décrivez-la par téléphone ou en passant à l’atelier.</p>
+      </div>
+      <ul class="examples">
+        {examples.map((e, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <h3>{e.title}</h3>
+            <p class="muted">{e.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pratique-title">
+    <div class="wrap split">
+      <div class="stack" data-reveal>
+        <h2 id="pratique-title">Bon à savoir</h2>
+        <ul class="rule-list tips">
+          <li><strong>Venez avec les chaussures</strong> que vous porterez avec le vêtement : c’est indispensable pour un ourlet juste.</li>
+          <li><strong>Le devis se fait sur place</strong>, une fois le vêtement examiné.</li>
+          <li><strong>Pour une tenue de cérémonie</strong>, venez suffisamment tôt avant la date pour prévoir un essayage.</li>
+        </ul>
+      </div>
+      <div class="stack hours-card" data-reveal>
+        <h3>Horaires de l’atelier</h3>
+        <Hours />
+        <p class="muted small">{site.address.street}, {site.address.postalCode} {site.address.city}</p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Une retouche à faire ?" text="Appelez pour vérifier que l’atelier est disponible, puis passez avec votre vêtement. Lundi au jeudi, 10 h 30 – 16 h." />
+</Base>
+
+<style>
+  .page-head :global(.photo) { max-width: 28rem; justify-self: end; width: 100%; }
+  @media (max-width: 859px) { .page-head :global(.photo) { aspect-ratio: 3 / 2 !important; max-width: none; } }
+  .examples { list-style: none; margin: 2.5rem 0 0; padding: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  @media (min-width: 700px) { .examples { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1040px) { .examples { grid-template-columns: repeat(4, 1fr); } }
+  .examples li { background: var(--surface); padding: 2rem; display: grid; gap: 0.5rem; align-content: start; }
+  .tips li { line-height: 1.6; }
+  .hours-card { border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.5rem, 4vw, 2.5rem); background: var(--surface); align-self: start; }
+</style>

@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import type { Photo as PhotoT } from '../data/photos';
+
+interface Props {
+  photo: PhotoT;
+  widths?: number[];
+  sizes: string;
+  ratio?: string;
+  priority?: boolean;
+  class?: string;
+}
+const { photo, widths = [400, 700, 1000, 1300], sizes, ratio, priority = false, class: cls } = Astro.props;
+---
+<figure class:list={['photo', cls]} style={ratio ? `aspect-ratio:${ratio}` : undefined}>
+  <Image
+    src={photo.src}
+    alt={photo.alt}
+    widths={widths}
+    sizes={sizes}
+    format="avif"
+    quality={55}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    decoding={priority ? 'sync' : 'async'}
+  />
+  {photo.illustration && photo.credit && (
+    <figcaption>
+      Illustration · <a href={photo.credit.url} rel="noopener" target="_blank">{photo.credit.author} / Unsplash</a>
+    </figcaption>
+  )}
+</figure>

@@ -1,0 +1,177 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+---
+<form class="form" id="formulaire" action="/api/contact" method="post" novalidate data-contact-form data-email={site.email}>
+  <div class="form__row">
+    <div class="field">
+      <label for="f-name">Nom et prénom <span aria-hidden="true">*</span></label>
+      <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120" aria-describedby="f-name-err" />
+      <p class="field__err" id="f-name-err" hidden>Indiquez votre nom.</p>
+    </div>
+    <div class="field">
+      <label for="f-phone">Téléphone <span aria-hidden="true">*</span></label>
+      <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30" aria-describedby="f-phone-hint f-phone-err" />
+      <p class="field__hint" id="f-phone-hint">Pour que la couturière puisse vous rappeler.</p>
+      <p class="field__err" id="f-phone-err" hidden>Indiquez un numéro de téléphone valide.</p>
+    </div>
+  </div>
+
+  <div class="form__row">
+    <div class="field">
+      <label for="f-email">E-mail <span class="opt">(facultatif)</span></label>
+      <input id="f-email" name="email" type="email" autocomplete="email" spellcheck="false" maxlength="160" aria-describedby="f-email-err" />
+      <p class="field__err" id="f-email-err" hidden>Cette adresse e-mail ne semble pas valide.</p>
+    </div>
+    <div class="field">
+      <label for="f-subject">Votre demande</label>
+      <select id="f-subject" name="subject">
+        <option>Création sur mesure (soirée, cocktail)</option>
+        <option>Robe de mariée ou de mairie</option>
+        <option>Ajustement de robe de mariée</option>
+        <option>Retouche de vêtement</option>
+        <option>Autre question</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="f-date">Date de l’événement <span class="opt">(facultatif)</span></label>
+    <input id="f-date" name="date" type="date" />
+  </div>
+
+  <div class="field">
+    <label for="f-message">Message <span aria-hidden="true">*</span></label>
+    <textarea id="f-message" name="message" rows="5" required minlength="10" maxlength="3000" aria-describedby="f-message-err"></textarea>
+    <p class="field__err" id="f-message-err" hidden>Décrivez votre demande en quelques mots (10 caractères minimum).</p>
+  </div>
+
+  <div class="hp" aria-hidden="true">
+    <label for="f-website">Ne pas remplir</label>
+    <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <p class="small muted">
+    Les champs marqués * sont obligatoires. Vos informations servent uniquement à répondre à votre demande
+    (<a href="/confidentialite">confidentialité</a>).
+  </p>
+
+  <div class="form__submit">
+    <button class="btn" type="submit" data-submit>
+      <span data-label>Envoyer la demande</span>
+      <Icon name="arrow" />
+    </button>
+  </div>
+
+  <div class="form__status" role="status" aria-live="polite" tabindex="-1" data-status hidden></div>
+</form>
+
+<style>
+  .form { display: grid; gap: 1.25rem; }
+  .form__row { display: grid; gap: 1.25rem; }
+  @media (min-width: 640px) { .form__row { grid-template-columns: 1fr 1fr; } }
+  .field { display: grid; gap: 0.4rem; align-content: start; }
+  label { font-weight: 500; font-size: 0.95rem; }
+  .opt { font-weight: 400; color: var(--ink-2); }
+  input, select, textarea {
+    width: 100%; font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface);
+    border: 1px solid #cfc5b6; border-radius: var(--radius); padding: 0.8rem 0.9rem; min-height: 3rem;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+  textarea { resize: vertical; min-height: 8rem; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(134, 101, 39, 0.18); }
+  [aria-invalid='true'] { border-color: var(--err); }
+  .field__hint { font-size: 0.85rem; color: var(--ink-2); }
+  .field__err { font-size: 0.88rem; color: var(--err); font-weight: 500; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .form__status { border-radius: var(--radius); padding: 1.1rem 1.25rem; border: 1px solid var(--line); background: var(--surface); }
+  .form__status[data-type='ok'] { border-color: #b9d3bd; background: #eef5ef; color: var(--ok); }
+  .form__status[data-type='error'] { border-color: #e2bcb9; background: #fbefee; color: var(--err); }
+  .form__status[data-type='fallback'] { border-color: #e3d3ad; background: var(--gold-soft); color: var(--ink); }
+  .form__status :global(.actions) { margin-top: 0.9rem; }
+  .form__status :global(p + p) { margin-top: 0.4rem; }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = btn.querySelector('[data-label]')!;
+    const email = form.dataset.email!;
+
+    const checks: Record<string, (v: string) => boolean> = {
+      name: (v) => v.trim().length >= 2,
+      phone: (v) => v.replace(/[^\d+]/g, '').length >= 10,
+      email: (v) => v.trim() === '' || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+      message: (v) => v.trim().length >= 10,
+    };
+
+    const validateField = (name: string) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement;
+      const ok = checks[name](input.value);
+      input.setAttribute('aria-invalid', String(!ok));
+      (form.querySelector(`#f-${name}-err`) as HTMLElement).hidden = ok;
+      return ok;
+    };
+
+    Object.keys(checks).forEach((name) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement;
+      input.addEventListener('blur', () => { if (input.value) validateField(name); });
+      input.addEventListener('input', () => { if (input.getAttribute('aria-invalid') === 'true') validateField(name); });
+    });
+
+    const show = (type: 'ok' | 'error' | 'fallback', html: string) => {
+      status.hidden = false;
+      status.dataset.type = type;
+      status.innerHTML = html;
+      status.focus();
+    };
+
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+    const mailtoFrom = (d: Record<string, string>) => {
+      const body = [
+        `Nom : ${d.name}`, `Téléphone : ${d.phone}`, d.email ? `E-mail : ${d.email}` : '',
+        d.date ? `Date de l'événement : ${d.date}` : '', '', d.message,
+      ].filter((l, i) => l !== '' || i === 4).join('\n');
+      return `mailto:${email}?subject=${encodeURIComponent(`Demande via le site — ${d.subject}`)}&body=${encodeURIComponent(body)}`;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const invalid = Object.keys(checks).filter((n) => !validateField(n));
+      if (invalid.length) {
+        (form.elements.namedItem(invalid[0]) as HTMLElement).focus();
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+      btn.disabled = true;
+      label.textContent = 'Envoi en cours…';
+      status.hidden = true;
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.ok) {
+          form.reset();
+          show('ok', `<p><strong>Merci ${esc(data.name.split(' ')[0])}, votre demande est envoyée.</strong></p><p>La couturière vous recontactera au ${esc(data.phone)}. Pour une demande urgente, appelez directement l’atelier.</p>`);
+        } else if (json.code === 'not_configured' || res.status === 404 || res.status === 405) {
+          show('fallback', `<p><strong>L’envoi direct n’est pas encore activé sur ce site.</strong></p><p>Votre message est prêt : ouvrez-le dans votre messagerie ou appelez l’atelier.</p><div class="actions"><a class="btn" href="${mailtoFrom(data)}">Ouvrir dans ma messagerie</a><a class="btn btn--ghost" href="tel:+33634425168">Appeler l’atelier</a></div>`);
+        } else {
+          show('error', `<p><strong>${esc(json.error || 'La demande n’a pas pu être envoyée.')}</strong></p><p>Réessayez dans un instant, ou <a href="${mailtoFrom(data)}">envoyez-la par e-mail</a>.</p>`);
+        }
+      } catch {
+        show('error', `<p><strong>Connexion impossible.</strong></p><p>Vérifiez votre connexion et réessayez, ou <a href="${mailtoFrom(data)}">envoyez votre demande par e-mail</a>.</p>`);
+      } finally {
+        btn.disabled = false;
+        label.textContent = 'Envoyer la demande';
+      }
+    });
+  }
+</script>

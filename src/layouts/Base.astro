@@ -1,0 +1,146 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import MobileBar from '../components/MobileBar.astro';
+import ogDefault from '../assets/og-default.jpg';
+import { getImage } from 'astro:assets';
+
+interface Crumb { name: string; href: string }
+interface Props {
+  title: string;
+  description: string;
+  breadcrumbs?: Crumb[];
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+const { title, description, breadcrumbs = [], jsonLd = [], noindex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/', Astro.site);
+const fullTitle = title.includes('Belladele') ? title : `${title} | ${site.name}`;
+const og = await getImage({ src: ogDefault, width: 1200, height: 630, format: 'jpg', fit: 'cover' });
+const ogUrl = new URL(og.src, Astro.site).href;
+const origin = Astro.site!.origin;
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${origin}/#atelier`,
+  name: site.legalTradeName,
+  alternateName: site.name,
+  description: site.description,
+  url: `${origin}/`,
+  image: ogUrl,
+  telephone: site.phoneIntl,
+  email: site.email,
+  priceRange: 'Sur devis',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: site.address.postalCode,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    addressCountry: site.address.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  hasMap: site.googleMapsUrl,
+  areaServed: [site.address.city, ...site.nearby].map((name) => ({ '@type': 'City', name })),
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+      opens: '10:30',
+      closes: '16:00',
+    },
+  ],
+  sameAs: [site.social.instagram.url, site.googleMapsUrl],
+  knowsAbout: ['Retouches de vêtements', 'Robe de mariée sur mesure', 'Robe de soirée sur mesure', 'Robe de cocktail', 'Robe de mairie', 'Ajustement de robe de mariée'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Prestations de couture',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Création de robe sur mesure et semi-mesure', url: `${origin}/creation-sur-mesure` } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Robe de mariée et robe de mairie sur mesure, ajustement de robe de mariée', url: `${origin}/robe-de-mariee` } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Retouches de vêtements', url: `${origin}/retouches` } },
+    ],
+  },
+};
+
+const crumbLd = breadcrumbs.length
+  ? [{
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ name: 'Accueil', href: '/' }, ...breadcrumbs].map((c, i) => ({
+        '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.href, Astro.site).href,
+      })),
+    }]
+  : [];
+
+const ld = [business, ...crumbLd, ...jsonLd];
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#f8f5ef" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Belladele Couture — atelier de couture à Groslay" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="geo.region" content="FR-95" />
+    <meta name="geo.placename" content={site.address.city} />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    {ld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <Header />
+    <main id="contenu" tabindex="-1">
+      {breadcrumbs.length > 0 && (
+        <nav class="wrap breadcrumb" aria-label="Fil d’Ariane" style="padding-top:1.5rem">
+          <ol>
+            <li><a href="/">Accueil</a></li>
+            {breadcrumbs.map((c, i) => (
+              <li>{i === breadcrumbs.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={c.href}>{c.name}</a>}</li>
+            ))}
+          </ol>
+        </nav>
+      )}
+      <slot />
+    </main>
+    <Footer />
+    <MobileBar />
+
+    <script>
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        }, { rootMargin: '0px 0px -8% 0px' });
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('is-in'));
+      }
+    </script>
+  </body>
+</html>

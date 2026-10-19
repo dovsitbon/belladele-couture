@@ -1,0 +1,36 @@
+---
+import { site } from '../data/site';
+interface Props { tone?: 'dark' | 'light' }
+const { tone = 'dark' } = Astro.props;
+const fmt = (t: string) => t.replace(':', ' h ').replace(' h 00', ' h');
+---
+<table class:list={['hours', `hours--${tone}`]} data-hours-table>
+  <caption class="visually-hidden">Horaires d’ouverture de l’atelier</caption>
+  <tbody>
+    {site.hours.map((h) => (
+      <tr data-day={h.day}>
+        <th scope="row">{h.label}</th>
+        <td>{h.open && h.close ? `${fmt(h.open)} – ${fmt(h.close)}` : 'Fermé'}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  .hours { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+  .hours th { text-align: left; font-weight: 400; }
+  .hours td { text-align: right; font-variant-numeric: tabular-nums; }
+  .hours th, .hours td { padding: 0.6rem 0; border-bottom: 1px solid var(--line); }
+  .hours tr.is-today th, .hours tr.is-today td { font-weight: 600; color: var(--gold); }
+  .hours--light th, .hours--light td { border-color: rgba(243, 237, 227, 0.16); color: var(--deep-ink); }
+  .hours--light tr.is-today th, .hours--light tr.is-today td { color: #e2c48a; }
+</style>
+
+<script>
+  const wd = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Paris', weekday: 'short' }).format(new Date());
+  const day = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(wd) + 1;
+  document.querySelectorAll(`[data-hours-table] tr[data-day="${day}"]`).forEach((tr) => {
+    tr.classList.add('is-today');
+    tr.querySelector('th')?.insertAdjacentHTML('beforeend', ' <span class="visually-hidden">(aujourd’hui)</span>');
+  });
+</script>

@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../data/photos';
+import { site } from '../data/site';
+
+// Galerie provisoire : photos d'illustration. À remplacer par les réalisations de l'atelier (voir src/data/photos.ts).
+const gallery = [
+  { p: photos.robeVitrine, r: '3 / 4' },
+  { p: photos.dentelle, r: '3 / 4' },
+  { p: photos.robeSoireeNoire, r: '3 / 2' },
+  { p: photos.robeMarieeSuspendue, r: '3 / 4' },
+  { p: photos.satin, r: '3 / 4' },
+  { p: photos.portantBobines, r: '3 / 4' },
+  { p: photos.dentellePerlee, r: '3 / 4' },
+  { p: photos.aiguille, r: '3 / 2' },
+  { p: photos.marieeFenetre, r: '3 / 4' },
+];
+---
+<Base
+  title="Galerie : robes et matières"
+  description="L’univers de l’atelier Belladele Couture à Groslay : robes de soirée, de cocktail, de mariée et matières. Retrouvez les réalisations de l’atelier sur Instagram."
+  breadcrumbs={[{ name: 'Galerie', href: '/galerie' }]}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Galerie</p>
+      <h1>Robes, dentelles <em>et satins</em></h1>
+      <p class="lead">
+        Les photos ci-dessous sont des illustrations de l’univers de l’atelier. Les robes réellement réalisées
+        par Belladele Couture sont publiées sur Instagram.
+      </p>
+      <div class="actions" style="margin-top:2rem">
+        <a class="btn" href={site.social.instagram.url} rel="noopener" target="_blank"><Icon name="instagram" />Voir les réalisations sur Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Photos" style="padding-top:0">
+    <div class="wrap">
+      <div class="masonry">
+        {gallery.map((g, i) => (
+          <div data-reveal style={`--i:${i % 3}`}>
+            <Photo photo={g.p} sizes="(min-width: 1040px) 30vw, (min-width: 640px) 45vw, 100vw" ratio={g.r} widths={[400, 700, 1000]} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .masonry { columns: 1; column-gap: 1rem; }
+  @media (min-width: 640px) { .masonry { columns: 2; } }
+  @media (min-width: 1040px) { .masonry { columns: 3; column-gap: 1.25rem; } }
+  .masonry > div { break-inside: avoid; margin-bottom: 1rem; }
+  @media (min-width: 1040px) { .masonry > div { margin-bottom: 1.25rem; } }
+</style>

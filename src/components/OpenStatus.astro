@@ -1,0 +1,59 @@
+---
+/** Indique en direct (heure de Paris) si l'atelier est ouvert. Rendu statique neutre, enrichi côté client. */
+import { site } from '../data/site';
+interface Props { tone?: 'dark' | 'light' }
+const { tone = 'dark' } = Astro.props;
+---
+<p class:list={['open-status', `open-status--${tone}`]} data-open-status data-hours={JSON.stringify(site.hours)} aria-live="polite">
+  <span class="dot" aria-hidden="true"></span>
+  <span data-text>Lundi au jeudi, 10 h 30 – 16 h</span>
+</p>
+
+<style>
+  .open-status { display: inline-flex; align-items: center; gap: 0.55rem; font-size: 0.9rem; margin: 0; }
+  .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--ink-2); flex: none; }
+  .open-status[data-state='open'] .dot { background: #3f8f4f; box-shadow: 0 0 0 3px rgba(63, 143, 79, 0.18); }
+  .open-status[data-state='closed'] .dot { background: #b0563f; }
+  .open-status--light { color: var(--deep-ink-2); }
+</style>
+
+<script>
+  type H = { day: number; label: string; open: string | null; close: string | null };
+  const fmt = (t: string) => t.replace(':', ' h ').replace(' h 00', ' h');
+
+  function parisNow() {
+    const parts = new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'Europe/Paris', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false,
+    }).formatToParts(new Date());
+    const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+    const days = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'];
+    return { day: days.indexOf(get('weekday')) + 1, minutes: Number(get('hour')) * 60 + Number(get('minute')) };
+  }
+  const toMin = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3, 5));
+
+  function update(el: HTMLElement) {
+    const hours: H[] = JSON.parse(el.dataset.hours || '[]');
+    const { day, minutes } = parisNow();
+    if (day < 1) return;
+    const today = hours.find((h) => h.day === day);
+    const text = el.querySelector('[data-text]')!;
+    if (today?.open && today.close && minutes >= toMin(today.open) && minutes < toMin(today.close)) {
+      el.dataset.state = 'open';
+      text.textContent = `Ouvert maintenant · jusqu’à ${fmt(today.close)}`;
+      return;
+    }
+    el.dataset.state = 'closed';
+    if (today?.open && minutes < toMin(today.open)) {
+      text.textContent = `Fermé · ouvre aujourd’hui à ${fmt(today.open)}`;
+      return;
+    }
+    for (let i = 1; i <= 7; i++) {
+      const next = hours.find((h) => h.day === ((day - 1 + i) % 7) + 1);
+      if (next?.open) {
+        text.textContent = `Fermé · ouvre ${i === 1 ? 'demain' : next.label.toLowerCase()} à ${fmt(next.open)}`;
+        return;
+      }
+    }
+  }
+  document.querySelectorAll<HTMLElement>('[data-open-status]').forEach(update);
+</script>
